@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduPortal - Student Login & Academic Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              900: '#312e81',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .glass-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+    .gradient-bg {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311b92 100%);
+    }
+    .animated-bg {
+      background: linear-gradient(-45deg, #4f46e5, #7c3aed, #2563eb, #0d9488);
+      background-size: 400% 400%;
+      animation: gradient 12s ease infinite;
+    }
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="font-sans bg-slate-900 text-slate-800 min-h-screen antialiased flex flex-col justify-between selection:bg-brand-500 selection:text-white">
+
+  <!-- ==================== LOGIN CONTAINER ==================== -->
+  <div id="loginView" class="min-h-screen animated-bg flex items-center justify-center p-4 sm:p-6 lg:p-8">
+    <div class="w-full max-w-xl">
+      <!-- Header Banner -->
+      <div class="text-center mb-8 text-white">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md mb-4 border border-white/20 shadow-2xl">
+          <i class="fa-solid fa-graduation-cap text-3xl text-indigo-200"></i>
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight">University Student Portal</h1>
+        <p class="mt-2 text-indigo-100/80 text-sm sm:text-base">Sign in to access your course modules, grades, and schedules</p>
+      </div>
+
+      <!-- Card -->
+      <div class="glass-card rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+        <!-- Accent line -->
+        <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
+
+        <form id="studentLoginForm" onsubmit="handleLoginSubmit(event)" novalidate class="space-y-5">
+          
+          <!-- Student Name Input -->
+          <div>
+            <label for="studentName" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+              Full Name <span class="text-red-500">*</span>
+            </label>
+            <div class="relative rounded-xl shadow-sm">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                <i class="fa-regular fa-user text-sm"></i>
+              </div>
+              <input 
+                type="text" 
+                id="studentName" 
+                class="w-full pl-10 pr-4 py-3 bg-slate-50/80 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all duration-200 text-sm font-medium text-slate-900 placeholder:text-slate-400"
+                placeholder="e.g. Alex Morgan"
+                required
+              />
+            </div>
+            <p id="nameError" class="hidden mt-1 text-xs text-red-500 flex items-center gap-1">
+              <i class="fa-solid fa-circle-exclamation"></i> Please enter your full name.
+            </p>
+          </div>
+
+          <!-- Department Selector / Input Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Department Name -->
+            <div>
+              <label for="deptName" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                Department Name <span class="text-red-500">*</span>
+              </label>
+              <div class="relative rounded-xl shadow-sm">
+                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                  <i class="fa-solid fa-building-columns text-sm"></i>
+                </div>
+                <select 
+                  id="deptName" 
+                  class="w-full pl-10 pr-4 py-3 bg-slate-50/80 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all duration-200 text-sm font-medium text-slate-900 appearance-none cursor-pointer"
+                  required
+                >
+                  <option value="" disabled selected>Select Department</option>
+                  <option value="Computer Science & Eng">Computer Science & Eng</option>
+                  <option value="Information Technology">Information Technology</option>
+                  <option value="Electrical Engineering">Electrical Engineering</option>
+                  <option value="Mechanical Engineering">Mechanical Engineering</option>
+                  <option value="Business Administration">Business Administration</option>
+                  <option value="Data Science">Data Science</option>
+                </select>
+                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
+                  <i class="fa-solid fa-chevron-down text-xs"></i>
+                </div>
+              </div>
+              <p id="deptNameError" class="hidden mt-1 text-xs text-red-500 flex items-center gap-1">
+                <i class="fa-solid fa-circle-exclamation"></i> Select a department.
+              </p>
+            </div>
+
+            <!-- Department Number / Code -->
+            <div>
+              <label for="deptNumber" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                Dept / Course Code <span class="text-red-500">*</span>
+              </label>
+              <div class="relative rounded-xl shadow-sm">
+                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                  <i class="fa-solid fa-hashtag text-sm"></i>
+                </div>
+                <input 
+                  type="text" 
+                  id="deptNumber" 
+                  class="w-full pl-10 pr-4 py-3 bg-slate-50/80 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all duration-200 text-sm font-medium text-slate-900 placeholder:text-slate-400"
+                  placeholder="e.g. CS-101 / DEPT-04"
+                  required
+                />
+              </div>
+              <p id="deptNumError" class="hidden mt-1 text-xs text-red-500 flex items-center gap-1">
+                <i class="fa-solid fa-circle-exclamation"></i> Enter dept code.
+              </p>
+            </div>
+          </div>
+
+          <!-- Student ID / Email Input -->
+          <div>
+            <label for="studentEmail" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+              Student ID / Email Address <span class="text-red-500">*</span>
+            </label>
+            <div class="relative rounded-xl shadow-sm">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                <i class="fa-regular fa-envelope text-sm"></i>
+              </div>
+              <input 
+                type="text" 
+                id="studentEmail" 
+                class="w-full pl-10 pr-4 py-3 bg-slate-50/80 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all duration-200 text-sm font-medium text-slate-900 placeholder:text-slate-400"
+                placeholder="student@university.edu or STU-8890"
+                required
+              />
+            </div>
+            <p id="emailError" class="hidden mt-1 text-xs text-red-500 flex items-center gap-1">
+              <i class="fa-solid fa-circle-exclamation"></i> Enter a valid ID or Email.
+            </p>
+          </div>
+
+          <!-- Password Input -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label for="studentPassword" class="block text-xs font-bold uppercase tracking-wider text-slate-600">
+                Password <span class="text-red-500">*</span>
+              </label>
+              <button type="button" onclick="handleForgotPassword()" class="text-xs font-semibold text-brand-600 hover:text-brand-700 transition">
+                Forgot password?
+              </button>
+            </div>
+            <div class="relative rounded-xl shadow-sm">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                <i class="fa-solid fa-lock text-sm"></i>
+              </div>
+              <input 
+                type="password" 
+                id="studentPassword" 
+                class="w-full pl-10 pr-12 py-3 bg-slate-50/80 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all duration-200 text-sm font-medium text-slate-900 placeholder:text-slate-400"
+                placeholder="••••••••"
+                required
+              />
+              <button 
+                type="button" 
+                onclick="togglePasswordVisibility()" 
+                class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition"
+                title="Toggle Password Visibility"
+              >
+                <i id="eyeIcon" class="fa-regular fa-eye text-sm"></i>
+              </button>
+            </div>
+            <p id="passwordError" class="hidden mt-1 text-xs text-red-500 flex items-center gap-1">
+              <i class="fa-solid fa-circle-exclamation"></i> Password must be at least 6 characters.
+            </p>
+          </div>
+
+          <!-- Remember Me & Terms -->
+          <div class="flex items-center justify-between pt-1">
+            <label class="inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="rememberMe" class="rounded border-slate-300 text-brand-600 focus:ring-brand-500 h-4 w-4">
+              <span class="ml-2 text-xs text-slate-600 font-medium">Keep me signed in</span>
+            </label>
+            <span class="text-xs text-slate-400">Term: Spring 2026</span>
+          </div>
+
+          <!-- Submit Button -->
+          <button 
+            type="submit" 
+            class="w-full py-3.5 px-6 bg-gradient-to-r from-brand-600 to-indigo-700 hover:from-brand-700 hover:to-indigo-800 text-white font-bold rounded-xl shadow-lg shadow-indigo-500/30 transition-all duration-200 hover:shadow-indigo-500/50 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 text-sm tracking-wide"
+          >
+            <span>Access Student Portal</span>
+            <i class="fa-solid fa-arrow-right text-xs"></i>
+          </button>
+        </form>
+
+        <div class="mt-6 pt-6 border-t border-slate-200/60 text-center">
+          <p class="text-xs text-slate-500">
+            Need technical assistance? <a href="#" onclick="alert('Helpdesk contacted. Check your registered email for support.'); return false;" class="text-brand-600 font-semibold hover:underline">Contact IT Helpdesk</a>
+          </p>
+        </div>
+      </div>
+
+      <p class="text-center text-xs text-indigo-200/60 mt-6">
+        &copy; 2026 Academic Information Systems. All rights reserved.
+      </p>
+    </div>
+  </div>
+
+
+  <!-- ==================== DASHBOARD CONTAINER ==================== -->
+  <div id="dashboardView" class="hidden min-h-screen bg-slate-100 flex flex-col lg:flex-row">
+    
+    <!-- Sidebar -->
+    <aside class="w-full lg:w-72 bg-slate-900 text-white flex-shrink-0 flex flex-col justify-between">
+      <div>
+        <!-- Brand Header -->
+        <div class="p-6 flex items-center justify-between border-b border-slate-800">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center text-white shadow-lg shadow-brand-500/30">
+              <i class="fa-solid fa-graduation-cap text-xl"></i>
+            </div>
+            <div>
+              <h2 class="font-bold text-base tracking-wide leading-tight">EduPortal</h2>
+              <span class="text-[10px] text-brand-300 font-semibold uppercase tracking-wider">Student Academic Suite</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="p-4 space-y-1">
+          <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-brand-600 text-white font-semibold text-sm transition">
+            <i class="fa-solid fa-chart-pie w-5 text-center"></i>
+            <span>Dashboard</span>
+          </a>
+          <a href="#" onclick="alert('Module available in full academic deployment.')" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 font-medium text-sm transition">
+            <i class="fa-solid fa-book-open w-5 text-center"></i>
+            <span>My Courses</span>
+          </a>
+          <a href="#" onclick="alert('Module available in full academic deployment.')" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 font-medium text-sm transition">
+            <i class="fa-solid fa-award w-5 text-center"></i>
+            <span>Grades & Transcripts</span>
+          </a>
+          <a href="#" onclick="alert('Module available in full academic deployment.')" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 font-medium text-sm transition">
+            <i class="fa-regular fa-calendar-check w-5 text-center"></i>
+            <span>Class Schedule</span>
+          </a>
+          <a href="#" onclick="alert('Module available in full academic deployment.')" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 font-medium text-sm transition">
+            <i class="fa-regular fa-bell w-5 text-center"></i>
+            <span>Notifications</span>
+          </a>
+        </nav>
+      </div>
+
+      <!-- Quick Profile Card in Sidebar -->
+      <div class="p-4 border-t border-slate-800">
+        <div class="p-3 bg-slate-800/80 rounded-xl flex items-center gap-3">
+          <div id="avatarInitials" class="w-10 h-10 rounded-full bg-indigo-500 text-white font-extrabold flex items-center justify-center text-sm shadow">
+            ST
+          </div>
+          <div class="overflow-hidden">
+            <h4 id="dashSidebarName" class="text-sm font-bold text-white truncate">Student Name</h4>
+            <p id="dashSidebarDeptNum" class="text-xs text-slate-400 truncate">CS-101</p>
+          </div>
+        </div>
+        <button 
+          onclick="handleLogout()" 
+          class="mt-3 w-full py-2.5 px-4 bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 font-semibold rounded-xl text-xs transition flex items-center justify-center gap-2"
+        >
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          <span>Sign Out</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col overflow-y-auto custom-scrollbar">
+      
+      <!-- Top Navigation Header -->
+      <header class="bg-white border-b border-slate-200 px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sticky top-0 z-10 shadow-sm">
+        <div>
+          <h2 class="text-xl font-extrabold text-slate-900">Student Overview</h2>
+          <p class="text-xs text-slate-500">Academic Year 2025-2026 &bull; Spring Term</p>
+        </div>
+
+        <!-- Right Side Metadata -->
+        <div class="flex items-center gap-3 self-end sm:self-auto">
+          <div class="text-right hidden sm:block">
+            <p class="text-xs text-slate-400 font-medium">Session Started</p>
+            <p id="loginTimestamp" class="text-xs font-bold text-slate-700">Just now</p>
+          </div>
+          <div class="h-8 w-px bg-slate-200 hidden sm:block"></div>
+          <button onclick="handleLogout()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center gap-2">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Log Out</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Dashboard Body Content -->
+      <div class="p-6 max-w-7xl w-full mx-auto space-y-6">
+        
+        <!-- Welcome Banner & Student Profile Information Card -->
+        <div class="bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-700 rounded-2xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+          <div class="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+            
+            <div class="md:col-span-2 space-y-2">
+              <span class="inline-block px-3 py-1 bg-white/20 backdrop-blur-md text-xs font-bold rounded-full uppercase tracking-wider text-indigo-100">
+                Active Student
+              </span>
+              <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">
+                Welcome, <span id="dashWelcomeName">Student</span>!
+              </h1>
+              <p class="text-indigo-100/80 text-sm max-w-xl">
+                Your portal gives you real-time updates on assignments, course progression, and departmental announcements.
+              </p>
+            </div>
+
+            <!-- Profile Details Quick Grid -->
+            <div class="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20 space-y-2 text-xs">
+              <div class="flex justify-between border-b border-white/10 pb-1.5">
+                <span class="text-indigo-200">Department:</span>
+                <span id="dashDeptName" class="font-bold text-white truncate max-w-[150px]">Computer Science</span>
+              </div>
+              <div class="flex justify-between border-b border-white/10 pb-1.5">
+                <span class="text-indigo-200">Dept Code:</span>
+                <span id="dashDeptNum" class="font-bold text-white">CS-101</span>
+              </div>
+              <div class="flex justify-between border-b border-white/10 pb-1.5">
+                <span class="text-indigo-200">Student ID / Email:</span>
+                <span id="dashStudentId" class="font-bold text-white truncate max-w-[150px]">STU-0000</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-indigo-200">Academic Standing:</span>
+                <span class="font-bold text-emerald-300">Good Standing</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Stats Overview Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Current GPA</p>
+              <p class="text-2xl font-extrabold text-slate-800 mt-1">3.84 <span class="text-xs font-normal text-slate-400">/ 4.0</span></p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl font-bold">
+              <i class="fa-solid fa-chart-line"></i>
+            </div>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Enrolled Courses</p>
+              <p class="text-2xl font-extrabold text-slate-800 mt-1">5 Modules</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl font-bold">
+              <i class="fa-solid fa-book-bookmark"></i>
+            </div>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Attendance Rate</p>
+              <p class="text-2xl font-extrabold text-slate-800 mt-1">96%</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl font-bold">
+              <i class="fa-regular fa-clock"></i>
+            </div>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Completed Credits</p>
+              <p class="text-2xl font-extrabold text-slate-800 mt-1">72 / 120</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl font-bold">
+              <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Main Grid: Enrolled Courses & Announcements -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Enrolled Courses Preview -->
+          <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h3 class="font-bold text-slate-800 text-lg">Enrolled Courses</h3>
+                <p class="text-xs text-slate-400">Current Semester Schedule & Progress</p>
+              </div>
+              <button onclick="alert('Redirecting to full course catalog...')" class="text-xs font-bold text-brand-600 hover:text-brand-700">View All</button>
+            </div>
+
+            <div id="courseListContainer" class="space-y-3">
+              <!-- Dynamically Populated or Default Courses -->
+            </div>
+          </div>
+
+          <!-- Department Announcements & Deadlines -->
+          <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="font-bold text-slate-800 text-lg">Announcements</h3>
+                <span class="px-2 py-0.5 bg-amber-100 text-amber-800 rounded text-[10px] font-bold uppercase">2 New</span>
+              </div>
+
+              <div class="space-y-4">
+                <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-100">
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="w-2 h-2 rounded-full bg-brand-600"></span>
+                    <h4 class="text-xs font-bold text-slate-800">Department Exam Schedule</h4>
+                  </div>
+                  <p class="text-xs text-slate-500">Mid-term examinations scheduled for next week. Download timetables from portal.</p>
+                  <span class="text-[10px] text-slate-400 mt-2 block">2 hours ago</span>
+                </div>
+
+                <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-100">
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <h4 class="text-xs font-bold text-slate-800">Project Proposal Submission</h4>
+                  </div>
+                  <p class="text-xs text-slate-500">Submit final capstone project outlines before Friday 11:59 PM.</p>
+                  <span class="text-[10px] text-slate-400 mt-2 block">Yesterday</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Download Button -->
+            <button onclick="alert('Downloading Student Academic Record PDF...')" class="mt-6 w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-file-arrow-down"></i>
+              <span>Download Transcript Preview</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+
+  <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+  <script>
+    // Toggle Password Visibility
+    function togglePasswordVisibility() {
+      const passwordInput = document.getElementById('studentPassword');
+      const eyeIcon = document.getElementById('eyeIcon');
+
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        eyeIcon.classList.remove('fa-eye');
+        eyeIcon.classList.add('fa-eye-slash');
+      } else {
+        passwordInput.type = 'password';
+        eyeIcon.classList.remove('fa-eye-slash');
+        eyeIcon.classList.add('fa-eye');
+      }
+    }
+
+    // Forgot Password Action
+    function handleForgotPassword() {
+      const email = document.getElementById('studentEmail').value.trim();
+      if (email) {
+        alert(`Password reset link sent to: ${email}`);
+      } else {
+        alert('Please enter your Student ID or Email in the field first.');
+      }
+    }
+
+    // Handle Login Submission & Validation
+    function handleLoginSubmit(event) {
+      event.preventDefault();
+
+      // Retrieve elements
+      const nameInput = document.getElementById('studentName');
+      const deptNameInput = document.getElementById('deptName');
+      const deptNumInput = document.getElementById('deptNumber');
+      const emailInput = document.getElementById('studentEmail');
+      const passwordInput = document.getElementById('studentPassword');
+
+      // Error elements
+      const nameError = document.getElementById('nameError');
+      const deptNameError = document.getElementById('deptNameError');
+      const deptNumError = document.getElementById('deptNumError');
+      const emailError = document.getElementById('emailError');
+      const passwordError = document.getElementById('passwordError');
+
+      let isValid = true;
+
+      // 1. Validate Name
+      if (!nameInput.value.trim()) {
+        nameError.classList.remove('hidden');
+        nameInput.classList.add('border-red-500');
+        isValid = false;
+      } else {
+        nameError.classList.add('hidden');
+        nameInput.classList.remove('border-red-500');
+      }
+
+      // 2. Validate Department Name
+      if (!deptNameInput.value) {
+        deptNameError.classList.remove('hidden');
+        deptNameInput.classList.add('border-red-500');
+        isValid = false;
+      } else {
+        deptNameError.classList.add('hidden');
+        deptNameInput.classList.remove('border-red-500');
+      }
+
+      // 3. Validate Department Number
+      if (!deptNumInput.value.trim()) {
+        deptNumError.classList.remove('hidden');
+        deptNumInput.classList.add('border-red-500');
+        isValid = false;
+      } else {
+        deptNumError.classList.add('hidden');
+        deptNumInput.classList.remove('border-red-500');
+      }
+
+      // 4. Validate Student ID / Email
+      if (!emailInput.value.trim() || emailInput.value.trim().length < 3) {
+        emailError.classList.remove('hidden');
+        emailInput.classList.add('border-red-500');
+        isValid = false;
+      } else {
+        emailError.classList.add('hidden');
+        emailInput.classList.remove('border-red-500');
+      }
+
+      // 5. Validate Password Length (>= 6)
+      if (!passwordInput.value || passwordInput.value.length < 6) {
+        passwordError.classList.remove('hidden');
+        passwordInput.classList.add('border-red-500');
+        isValid = false;
+      } else {
+        passwordError.classList.add('hidden');
+        passwordInput.classList.remove('border-red-500');
+      }
+
+      // If valid, load Dashboard
+      if (isValid) {
+        const studentData = {
+          name: nameInput.value.trim(),
+          deptName: deptNameInput.value,
+          deptNum: deptNumInput.value.trim(),
+          email: emailInput.value.trim(),
+          loginTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+        };
+
+        renderDashboard(studentData);
+      }
+    }
+
+    // Render Student Dashboard
+    function renderDashboard(data) {
+      // Hide Login, Show Dashboard
+      document.getElementById('loginView').classList.add('hidden');
+      document.getElementById('dashboardView').classList.remove('hidden');
+
+      // Populate Profile Info
+      document.getElementById('dashWelcomeName').textContent = data.name;
+      document.getElementById('dashSidebarName').textContent = data.name;
+      document.getElementById('dashSidebarDeptNum').textContent = `${data.deptNum} • ${data.deptName}`;
+      document.getElementById('dashDeptName').textContent = data.deptName;
+      document.getElementById('dashDeptNum').textContent = data.deptNum;
+      document.getElementById('dashStudentId').textContent = data.email;
+      document.getElementById('loginTimestamp').textContent = data.loginTime;
+
+      // Generate Initials Avatar
+      const initials = data.name
+        .split(' ')
+        .map(n => n[0])
+        .join('')
+        .toUpperCase()
+        .substring(0, 2) || 'ST';
+      document.getElementById('avatarInitials').textContent = initials;
+
+      // Populate Courses
+      populateCourses(data.deptName, data.deptNum);
+    }
+
+    // Dynamic Course List Population based on selected department
+    function populateCourses(deptName, deptCode) {
+      const courseContainer = document.getElementById('courseListContainer');
+      
+      const courseTemplates = [
+        { title: `Advanced Data Structures`, code: `${deptCode}-201`, instructor: 'Dr. Evelyn Vance', progress: 82, color: 'bg-brand-600' },
+        { title: `Database Systems & Architecture`, code: `${deptCode}-304`, instructor: 'Prof. Marcus Brody', progress: 68, color: 'bg-emerald-600' },
+        { title: `Software Engineering Principles`, code: `${deptCode}-110`, instructor: 'Dr. Sarah Connor', progress: 90, color: 'bg-purple-600' },
+        { title: `Applied Mathematics & Logic`, code: `MATH-220`, instructor: 'Prof. Alan Turing', progress: 75, color: 'bg-amber-600' },
+      ];
+
+      courseContainer.innerHTML = courseTemplates.map(course => `
+        <div class="p-4 bg-slate-50 hover:bg-slate-100/80 rounded-xl border border-slate-100 transition flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 ${course.color} text-white rounded text-[10px] font-bold uppercase">${course.code}</span>
+              <h4 class="font-bold text-slate-800 text-sm">${course.title}</h4>
+            </div>
+            <p class="text-xs text-slate-400">Instructor: ${course.instructor}</p>
+          </div>
+
+          <div class="w-full sm:w-36 space-y-1">
+            <div class="flex justify-between text-xs font-semibold">
+              <span class="text-slate-400">Progress</span>
+              <span class="text-slate-700">${course.progress}%</span>
+            </div>
+            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+              <div class="${course.color} h-full rounded-full" style="width: ${course.progress}%"></div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Handle Logout
+    function handleLogout() {
+      // Reset Form Inputs
+      document.getElementById('studentLoginForm').reset();
+      
+      // Reset validation states
+      ['nameError', 'deptNameError', 'deptNumError', 'emailError', 'passwordError'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+      ['studentName', 'deptName', 'deptNumber', 'studentEmail', 'studentPassword'].forEach(id => {
+        document.getElementById(id).classList.remove('border-red-500');
+      });
+
+      // Show Login, Hide Dashboard
+      document.getElementById('dashboardView').classList.add('hidden');
+      document.getElementById('loginView').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
